@@ -1,17 +1,20 @@
-import { IImport } from "import-sort-parser";
+import { IImport, IParserOptions } from "import-sort-parser";
 import { IMatcherFunction, IStyleAPI, IStyleItem } from "import-sort-style";
-
-interface Options {
-  groups: string[][];
-}
 
 const defaultGroups = [["^@\\w", "^\\w"], ["^\\.\\./", "^\\./"], ["\\.s?css$"]];
 
-export default function Index(styleApi: IStyleAPI, _file: string, options?: Options): IStyleItem[] {
+export default function Index(
+  styleApi: IStyleAPI,
+  _file: string,
+  options?: IParserOptions & { groups: string[][] }
+): IStyleItem[] {
   const groups = options && options.groups ? options.groups : defaultGroups;
 
   const {
     and,
+    member,
+    name,
+    unicode,
     hasNoMember,
     hasDefaultMember,
     hasNamespaceMember,
@@ -30,9 +33,9 @@ export default function Index(styleApi: IStyleAPI, _file: string, options?: Opti
         const match: IMatcherFunction = (imported: IImport) => Boolean(new RegExp(regex).exec(imported.moduleName));
 
         return [
-          { match: and(match, hasNamespaceMember) },
-          { match: and(match, hasDefaultMember) },
-          { match: and(match, hasNamedMembers) },
+          { match: and(match, hasNamespaceMember), sort: member(unicode), sortNamedMembers: name(unicode) },
+          { match: and(match, hasDefaultMember), sort: member(unicode), sortNamedMembers: name(unicode) },
+          { match: and(match, hasNamedMembers), sort: member(unicode), sortNamedMembers: name(unicode) },
         ];
       }),
       { separator: true },

@@ -1,6 +1,6 @@
 {
   "name": "import-sort-style-regex",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Customizable style for import-sort by regular expressions",
   "author": "Jaxe (https://github.com/DevJWN)",
   "license": "ISC",
@@ -14,7 +14,7 @@
     "import-sort-style": "^6.0.0"
   },
   "devDependencies": {
-    "@types/node": "^14.6.2",
+    "@types/node": "^14.6.3",
     "@typescript-eslint/eslint-plugin": "^4.0.1",
     "eslint": "^7.8.1",
     "eslint-config-prettier": "^6.11.0",
