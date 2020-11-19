@@ -2,21 +2,26 @@
   "compilerOptions": {
     "target": "ESNext",
     "module": "CommonJS",
-    "lib": ["DOM", "ESNext"],
     "moduleResolution": "node",
+    "lib": ["DOM", "ESNext"],
+
     "esModuleInterop": true,
-    "declaration": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "removeComments": true,
     "resolveJsonModule": true,
-    "skipLibCheck": true,
-    "outDir": "./lib"
+
+    "strict": true,
+    "removeComments": true,
+
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+
+    "baseUrl": "src",
+    "outDir": "lib",
+
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true
   },
-  "include": ["./src/**/*.ts", "./src/**/*.tsx"],
-  "exclude": ["./**/node_modules"]
+
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "exclude": ["**/node_modules"]
 }
