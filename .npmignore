@@ -1,3 +1,7 @@
-src
+.vscode
+.git*
+.*ignore
+.*rc.js*
 tsconfig.json
-.prettierrc.json
+
+src

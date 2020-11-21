@@ -1,7 +1,7 @@
 .*
 !.*ignore
-!.*rc.json
-**/node_modules/
-*.log
+!.*rc.js*
 
-lib/
+**/node_modules
+
+lib

@@ -19,13 +19,17 @@ const sortByMemberType: ISorterFunction = (i1: IImport, i2: IImport) => {
 };
 
 const Index = (styleApi: IStyleAPI, _file: string, options?: IParserOptions & { groups: string[][] }): IStyleItem[] => {
-  const groups = options && options.groups ? options.groups : defaultGroups;
+  const groups = options?.groups || defaultGroups;
 
   const { and, unicode, moduleName, member, name, hasNoMember, isAbsoluteModule, isRelativeModule } = styleApi;
 
   return [
-    { match: and(hasNoMember, isAbsoluteModule), separator: true },
-    { match: and(hasNoMember, isRelativeModule), separator: true },
+    { match: and(hasNoMember, isAbsoluteModule) },
+    { separator: true },
+
+    { match: and(hasNoMember, isRelativeModule) },
+    { separator: true },
+
     ...groups.flatMap((group) => [
       ...group.map((regex) => {
         const match: IMatcherFunction = (i: IImport) => Boolean(new RegExp(regex).exec(i.moduleName));
