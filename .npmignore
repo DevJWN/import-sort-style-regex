@@ -1,7 +1,4 @@
-.vscode
-.git*
-.*ignore
-.*rc.js*
+.*
 tsconfig.json
 
 src

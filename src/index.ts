@@ -1,9 +1,14 @@
-import { IImport, IParserOptions } from "import-sort-parser";
-import { IMatcherFunction, ISorterFunction, IStyleAPI, IStyleItem } from "import-sort-style";
+import type { IImport, IParserOptions } from "import-sort-parser";
+import type { IMatcherFunction, ISorterFunction, IStyleAPI, IStyleItem } from "import-sort-style";
+
+type ImportSortStyleRegexOptions = IParserOptions & {
+  groups?: string[][];
+  sortByMemberType?: boolean;
+};
 
 const defaultGroups = [["^@\\w", "^\\w"], ["^\\.\\./", "^\\./"], ["\\.s?css$"]];
 
-const sortByMemberType: ISorterFunction = (i1: IImport, i2: IImport) => {
+const memberType: ISorterFunction = (i1: IImport, i2: IImport) => {
   const compareHasNamespaceMember = Number(!!i1.namespaceMember) - Number(!!i2.namespaceMember);
   if (compareHasNamespaceMember != 0) {
     return compareHasNamespaceMember;
@@ -18,31 +23,34 @@ const sortByMemberType: ISorterFunction = (i1: IImport, i2: IImport) => {
   return compareHasNamedMembers;
 };
 
-const Index = (styleApi: IStyleAPI, _file: string, options?: IParserOptions & { groups: string[][] }): IStyleItem[] => {
+const ImportSortStyleRegex = (styleApi: IStyleAPI, _file: string, options?: ImportSortStyleRegexOptions): IStyleItem[] => {
   const groups = options?.groups || defaultGroups;
+  const sortByMemberType = options?.sortByMemberType || false;
 
   const { and, unicode, moduleName, member, name, hasNoMember, isAbsoluteModule, isRelativeModule } = styleApi;
 
   return [
     { match: and(hasNoMember, isAbsoluteModule) },
     { separator: true },
-
     { match: and(hasNoMember, isRelativeModule) },
     { separator: true },
 
-    ...groups.flatMap((group) => [
-      ...group.map((regex) => {
-        const match: IMatcherFunction = (i: IImport) => Boolean(new RegExp(regex).exec(i.moduleName));
+    ...groups.flatMap((group) => {
+      return [
+        ...group.map<IStyleItem>((regex) => {
+          const regexMatch: IMatcherFunction = (i: IImport) => Boolean(new RegExp(regex).exec(i.moduleName));
 
-        return {
-          match,
-          sort: [sortByMemberType, moduleName(unicode), member(unicode)],
-          sortNamedMembers: name(unicode),
-        };
-      }),
-      { separator: true },
-    ]),
+          return {
+            match: regexMatch,
+            sort: [...(sortByMemberType ? [memberType] : []), moduleName(unicode), member(unicode)],
+            sortNamedMembers: name(unicode),
+          };
+        }),
+
+        { separator: true },
+      ];
+    }),
   ];
 };
 
-export default Index;
+export default ImportSortStyleRegex;

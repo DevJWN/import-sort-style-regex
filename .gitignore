@@ -1,7 +1,8 @@
+node_modules
+
 .*
 !.*ignore
+!.editorconfig
 !.*rc.js*
-
-**/node_modules
 
 lib
